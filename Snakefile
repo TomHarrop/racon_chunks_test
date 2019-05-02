@@ -13,6 +13,7 @@ py37 = 'shub://TomHarrop/singularity-containers:py3.7.3_biopython1.73'
 all_reads = 'all_reads.fq'
 
 ########
+
 # MAIN #
 ########
 
@@ -97,6 +98,9 @@ rule split_reads:
     output:
         r1 = 'reads/r1.fq',
         r2 = 'reads/r2.fq'
+    params:
+        fraction = fraction_to_map,
+        seed = seed
     log:
         'reads/split.log'
     singularity:

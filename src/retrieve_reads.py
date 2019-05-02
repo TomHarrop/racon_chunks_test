@@ -13,16 +13,17 @@ logging.basicConfig(
     filename=snakemake.log[0],
     level=logging.DEBUG)
 
-logging.info('sys.version')
-logging.info(sys.version)
-logging.info('sqlite3.version')
-logging.info(sqlite3.version)
-logging.info('platform.python_implementation()')
-logging.info(platform.python_implementation())
-logging.info('platform.platform()')
-logging.info(platform.platform())
-logging.info('Bio.__version__')
-logging.info(Bio.__version__)
+# debug biopython issue
+logging.debug('sys.version')
+logging.debug(sys.version)
+logging.debug('sqlite3.version')
+logging.debug(sqlite3.version)
+logging.debug('platform.python_implementation()')
+logging.debug(platform.python_implementation())
+logging.debug('platform.platform()')
+logging.debug(platform.platform())
+logging.debug('Bio.__version__')
+logging.debug(Bio.__version__)
 
 
 r1_db_file = snakemake.input['r1_idx']
