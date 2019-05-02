@@ -9,6 +9,9 @@ import multiprocessing
 racon_chunks = 'shub://TomHarrop/singularity-containers:racon-chunks'
 py36 = 'shub://TomHarrop/singularity-containers:py3.6.8_biopython1.73'
 py37 = 'shub://TomHarrop/singularity-containers:py3.7.3_biopython1.73'
+py36_mod = 'shub://TomHarrop/singularity-containers:py3.6.8_biopython1.73_mod'
+py37_mod = 'shub://TomHarrop/singularity-containers:py3.7.3_biopython1.73_mod'
+
 
 all_reads = 'all_reads.fq'
 
@@ -30,7 +33,10 @@ seed = 14
 
 rule target:
     input:
-        expand('py{py}/r{r}.idx',
+        # expand('py{py}/r{r}.idx',
+        #        py=['36', '37'],
+        #        r=['1', '2']),
+        expand('py{py}_mod/r{r}.idx',
                py=['36', '37'],
                r=['1', '2']),
         # expand('fq/chunk_{chunk}.fq',
@@ -64,6 +70,35 @@ rule target:
 #     script:
 #         'src/retrieve_reads.py'
 
+rule index_reads_36_mod:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'py36_mod/r{r}.idx'
+    log:
+        'py36_mod/r{r}.log'
+    benchmark:
+        'py36_mod/r{r}_benchmark.txt'
+    singularity:
+        py36_mod
+    script:
+        'src/index_reads.py'
+
+rule index_reads_37_mod:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'py37_mod/r{r}.idx'
+    log:
+        'py37_mod/r{r}.log'
+    benchmark:
+        'py37_mod/r{r}_benchmark.txt'
+    singularity:
+        py37_mod
+    script:
+        'src/index_reads.py'
+
+
 rule index_reads_36:
     input:
         'reads/r{r}.fq'
@@ -86,7 +121,7 @@ rule index_reads_37:
     log:
         'py37/r{r}.log'
     benchmark:
-        'py37/r{r}_idx.txt'
+        'py37/r{r}_benchmark.txt'
     singularity:
         py37
     script:
