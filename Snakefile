@@ -19,6 +19,10 @@ all_reads = 'all_reads.fq'
 # all_chunks = glob_wildcards('sam/chunk_{chunk}.sam').chunk
 # some_chunks = [x for x in all_chunks if int(x) < 10]
 
+fraction_to_map = 1
+seed = 14
+
+
 #########
 # RULES #
 #########
@@ -93,12 +97,17 @@ rule split_reads:
     output:
         r1 = 'reads/r1.fq',
         r2 = 'reads/r2.fq'
+    log:
+        'reads/split.log'
     singularity:
         racon_chunks
     shell:
         'reformat.sh '
         'in={input} '
         'int=t '
+        'verifyinterleaved=t '
+        'samplerate={params.fraction} '
+        'sampleseed={params.seed} '
         'out={output.r1} '
-        'out2={output.r2}'
-
+        'out2={output.r2} '
+        '2> {log}'
