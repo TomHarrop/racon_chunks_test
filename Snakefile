@@ -37,7 +37,8 @@ rule target:
     input:
         expand('py{py}{mod}/r1.idx',
                py=['36', '37', '371'],
-               mod=['', '_mod'])
+               mod=['', '_mod']),
+        'host/r1.idx'
         # expand('fq/chunk_{chunk}.fq',
         #        chunk=some_chunks)
 
@@ -156,6 +157,17 @@ rule index_reads_371:
     script:
         'src/index_reads.py'
 
+rule index_reads_host:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'host/r{r}.idx'
+    log:
+        'host/r{r}.log'
+    benchmark:
+        'host/r{r}_benchmark.txt'
+    script:
+        'src/index_reads.py'
 
 rule split_reads:
     input:
