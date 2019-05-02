@@ -11,6 +11,8 @@ py36 = 'shub://TomHarrop/singularity-containers:py3.6.8_biopython1.73'
 py37 = 'shub://TomHarrop/singularity-containers:py3.7.3_biopython1.73'
 py36_mod = 'shub://TomHarrop/singularity-containers:py3.6.8_biopython1.73_mod'
 py37_mod = 'shub://TomHarrop/singularity-containers:py3.7.3_biopython1.73_mod'
+py371 = 'shub://TomHarrop/singularity-containers:py3.7.1_biopython1.73'
+py371_mod = 'shub://TomHarrop/singularity-containers:py3.7.1_biopython1.73_mod'
 
 
 all_reads = 'all_reads.fq'
@@ -33,12 +35,9 @@ seed = 14
 
 rule target:
     input:
-        # expand('py{py}/r{r}.idx',
-        #        py=['36', '37'],
-        #        r=['1', '2']),
-        expand('py{py}_mod/r{r}.idx',
-               py=['36', '37'],
-               r=['1', '2']),
+        expand('py{py}{mod}/r1.idx',
+               py=['36', '37', '371'],
+               mod=['', '_mod'])
         # expand('fq/chunk_{chunk}.fq',
         #        chunk=some_chunks)
 
@@ -69,6 +68,22 @@ rule target:
 #         'fq/retrieve_{chunk}_benchmark.txt'
 #     script:
 #         'src/retrieve_reads.py'
+
+
+rule index_reads_371_mod:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'py371_mod/r{r}.idx'
+    log:
+        'py371_mod/r{r}.log'
+    benchmark:
+        'py371_mod/r{r}_benchmark.txt'
+    singularity:
+        py371_mod
+    script:
+        'src/index_reads.py'
+
 
 rule index_reads_36_mod:
     input:
@@ -126,6 +141,21 @@ rule index_reads_37:
         py37
     script:
         'src/index_reads.py'
+
+rule index_reads_371:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'py371/r{r}.idx'
+    log:
+        'py371/r{r}.log'
+    benchmark:
+        'py371/r{r}_benchmark.txt'
+    singularity:
+        py371
+    script:
+        'src/index_reads.py'
+
 
 rule split_reads:
     input:
