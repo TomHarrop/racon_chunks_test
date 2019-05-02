@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+
+import multiprocessing
+
+###########
+# GLOBALS #
+###########
+
+racon_chunks = 'shub://TomHarrop/singularity-containers:racon-chunks'
+py36 = 'shub://TomHarrop/singularity-containers:py3.6.8_biopython1.73'
+py37 = 'shub://TomHarrop/singularity-containers:py3.7.3_biopython1.73'
+
+all_reads = 'all_reads.fq'
+
+########
+# MAIN #
+########
+
+# all_chunks = glob_wildcards('sam/chunk_{chunk}.sam').chunk
+# some_chunks = [x for x in all_chunks if int(x) < 10]
+
+#########
+# RULES #
+#########
+
+rule target:
+    input:
+        expand('py{py}/r{r}.idx',
+               py=['36', '37'],
+               r=['1', '2']),
+        # expand('fq/chunk_{chunk}.fq',
+        #        chunk=some_chunks)
+
+# rule repair_reads:
+#     input:
+#         r1 = 'fq/chunk_{chunk}_r1.fq',
+#         r2 = 'fq/chunk_{chunk}_r2.fq'
+#     output:
+#         'fq/chunk_{chunk}.fq'
+#     shell:
+#         'repair.sh '
+#         'in={input.r1} '
+#         'in2={input.r2} '
+#         'repair=t '
+#         'out={output}'
+
+# rule retrieve_reads:
+#     input:
+#         sam = 'sam/chunk_{chunk}.sam',
+#         r1_idx = 'py37/r1.idx',
+#         r2_idx = 'py37/r2.idx',
+#         r1 = 'subset_r1.fq',
+#         r2 = 'subset_r2.fq'
+#     output:
+#         r1 = temp('fq/chunk_{chunk}_r1.fq'),
+#         r2 = temp('fq/chunk_{chunk}_r2.fq')
+#     benchmark:
+#         'fq/retrieve_{chunk}_benchmark.txt'
+#     script:
+#         'src/retrieve_reads.py'
+
+rule index_reads_36:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'py36/r{r}.idx'
+    log:
+        'py36/r{r}.log'
+    benchmark:
+        'py36/r{r}_benchmark.txt'
+    singularity:
+        py36
+    script:
+        'src/index_reads.py'
+
+rule index_reads_37:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'py37/r{r}.idx'
+    log:
+        'py37/r{r}.log'
+    benchmark:
+        'py37/r{r}_idx.txt'
+    singularity:
+        py37
+    script:
+        'src/index_reads.py'
+
+rule split_reads:
+    input:
+        all_reads
+    output:
+        r1 = 'reads/r1.fq',
+        r2 = 'reads/r2.fq'
+    singularity:
+        racon_chunks
+    shell:
+        'reformat.sh '
+        'in={input} '
+        'int=t '
+        'out={output.r1} '
+        'out2={output.r2}'
+
