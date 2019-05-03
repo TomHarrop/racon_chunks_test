@@ -38,6 +38,7 @@ rule target:
         expand('py{py}{mod}/r1.idx',
                py=['36', '37', '371'],
                mod=['', '_mod']),
+        'py363/r1.idx',
         'host/r1.idx'
         # expand('fq/chunk_{chunk}.fq',
         #        chunk=some_chunks)
