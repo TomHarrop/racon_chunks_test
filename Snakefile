@@ -13,7 +13,7 @@ py36_mod = 'shub://TomHarrop/singularity-containers:py3.6.8_biopython1.73_mod'
 py37_mod = 'shub://TomHarrop/singularity-containers:py3.7.3_biopython1.73_mod'
 py371 = 'shub://TomHarrop/singularity-containers:py3.7.1_biopython1.73'
 py371_mod = 'shub://TomHarrop/singularity-containers:py3.7.1_biopython1.73_mod'
-
+py363 = 'shub://TomHarrop/singularity-containers:py3.6.3_biopython1.73'
 
 all_reads = 'all_reads.fq'
 
@@ -111,6 +111,20 @@ rule index_reads_37_mod:
         'py37_mod/r{r}_benchmark.txt'
     singularity:
         py37_mod
+    script:
+        'src/index_reads.py'
+
+rule index_reads_363:
+    input:
+        'reads/r{r}.fq'
+    output:
+        'py363/r{r}.idx'
+    log:
+        'py363/r{r}.log'
+    benchmark:
+        'py363/r{r}_benchmark.txt'
+    singularity:
+        py363
     script:
         'src/index_reads.py'
 
