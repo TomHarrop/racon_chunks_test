@@ -25,7 +25,7 @@ all_reads = 'all_reads.fq'
 # all_chunks = glob_wildcards('sam/chunk_{chunk}.sam').chunk
 # some_chunks = [x for x in all_chunks if int(x) < 10]
 
-fraction_to_map = 1
+fraction_to_map = 0.01
 seed = 14
 
 
