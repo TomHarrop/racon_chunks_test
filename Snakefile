@@ -26,7 +26,8 @@ all_reads = 'all_reads.fq'
 # some_chunks = [x for x in all_chunks if int(x) < 10]
 
 # fraction_to_map = 0.01 # produces error
-fraction_to_map = 0.001
+# fraction_to_map = 0.001 # works 
+fraction_to_map = 0.005
 seed = 14
 
 
@@ -36,9 +37,8 @@ seed = 14
 
 rule target:
     input:
-        expand('py{py}{mod}/r1.idx',
-               py=['36', '37', '371'],
-               mod=['', '_mod']),
+        expand('py{py}/r1.idx',
+               py=['36', '37', '371']),
         'py363/r1.idx',
         'host/r1.idx'
         # expand('fq/chunk_{chunk}.fq',
